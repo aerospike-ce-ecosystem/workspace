@@ -18,6 +18,11 @@ help: ## Show available commands
 init: ## Initialize all submodules (recursive)
 	git submodule update --init --recursive
 
+.PHONY: pre-commit-install
+pre-commit-install: ## Install pre-commit hooks (workspace + all submodules)
+	pre-commit install --hook-type pre-commit --hook-type commit-msg
+	git submodule foreach 'if [ -f .pre-commit-config.yaml ]; then pre-commit install; fi'
+
 .PHONY: init-ssh
 init-ssh: ## Convert submodule URLs to SSH and initialize
 	@git submodule foreach 'url=$$(git remote get-url origin); ssh_url=$$(echo $$url | sed "s|https://github.com/|git@github.com:|"); git remote set-url origin $$ssh_url; echo "  → $$ssh_url"'
