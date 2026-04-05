@@ -1,0 +1,20 @@
+[submodule "aerospike-py"]
+	path = aerospike-py
+	url = https://github.com/aerospike-ce-ecosystem/aerospike-py.git
+	branch = main
+[submodule "aerospike-ce-kubernetes-operator"]
+	path = aerospike-ce-kubernetes-operator
+	url = https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator.git
+	branch = main
+[submodule "aerospike-cluster-manager"]
+	path = aerospike-cluster-manager
+	url = https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager.git
+	branch = main
+[submodule "aerospike-ce-ecosystem-plugins"]
+	path = aerospike-ce-ecosystem-plugins
+	url = https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins.git
+	branch = main
+[submodule "project-hub"]
+	path = project-hub
+	url = https://github.com/aerospike-ce-ecosystem/project-hub.git
+	branch = main
