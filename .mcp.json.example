@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "powerpoint": {
+      "command": "node",
+      "args": [
+        "<path-to>/Claude Extensions/ant.dir.ant.anthropic.ms_office_powerpoint/server/index.js"
+      ],
+      "env": {
+        "HOME": "/Users/<username>"
+      }
+    }
+  }
+}
