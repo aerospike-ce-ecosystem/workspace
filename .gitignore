@@ -14,3 +14,10 @@ Thumbs.db
 
 # MCP (machine-specific paths)
 .mcp.json
+
+# Local-only experiments / build artifacts at workspace root
+# (each submodule manages its own ignores)
+aerocm/
+node_modules/
+dist/
+.cache/
