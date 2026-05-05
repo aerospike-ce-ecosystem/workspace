@@ -49,6 +49,16 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Skip the cycle if there is already an open bot PR. Without this,
+          # repeated cron runs would queue new branches while a previous PR
+          # is still waiting on verify, piling up open PRs.
+          existing_open="$(gh pr list --state open --json headRefName \
+            --jq '[.[] | select(.headRefName | startswith("bot/bump-"))] | length')"
+          if [ "${existing_open:-0}" -gt 0 ]; then
+            echo "::notice::${existing_open} open auto-bump PR(s) found; skipping this cycle until they merge."
+            exit 0
+          fi
+
           # Dependency order. We only bump ONE submodule per run to avoid
           # race conditions (e.g., ACKO consuming a not-yet-merged aerospike-py
           # bump). Subsequent runs will pick up the next.

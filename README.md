@@ -48,7 +48,7 @@ claude plugin install aerospike-ce-ecosystem
 ## Documentation
 
 - [Project Hub](https://aerospike-ce-ecosystem.github.io/project-hub/) — architecture, ADRs, roadmap
-- [Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/history/releases/release-matrix) — submodule version compatibility
+- [Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/) — submodule version compatibility
 - [aerospike-py Docs](https://aerospike-ce-ecosystem.github.io/aerospike-py/) — Python client API
 - [ACKO Docs](https://aerospike-ce-ecosystem.github.io/aerospike-ce-kubernetes-operator/) — Operator guide
 

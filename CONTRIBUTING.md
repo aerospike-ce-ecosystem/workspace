@@ -69,7 +69,7 @@ the most load-bearing ADRs.
 Each submodule releases independently with its own semver tags. **This workspace
 does not release** — there is no `asc-workspace` tag. Compatibility between
 submodule versions is tracked in
-[`project-hub` › Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/history/releases/release-matrix).
+[`project-hub` › Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/).
 When a submodule cuts a release that breaks compatibility, update the matrix in the
 same PR.
 
