@@ -21,7 +21,7 @@ Workspace itself does not carry a semver tag — entries are dated.
 - `make test-all` — run `test-py`, `test-acko`, `test-cm` sequentially.
 - `CONTRIBUTING.md` — cross-repo workflow, dependency order, Conventional Commits,
   release policy.
-- `.github/` — PR / issue templates, `verify.yml` workspace smoke check,
+- `.github/` — issue templates, `verify.yml` workspace smoke check,
   `submodule-bump.yml` daily auto-bump with squash auto-merge, `dependabot.yml`
   for GitHub Actions updates.
 - `.gitignore` entries for `aerocm/`, `node_modules/`, `dist/`, `.cache/` at the

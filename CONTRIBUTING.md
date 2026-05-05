@@ -1,9 +1,7 @@
 # Contributing to asc-workspace
 
-Thanks for considering a contribution. This file describes how to work *across* the
-five Aerospike CE Ecosystem repos that this workspace bundles. For changes inside a
-specific repo, see that repo's `CONTRIBUTING.md` (when present) — this guide only
-covers workspace-level conventions.
+Conventions specific to this meta-repo. For changes inside a submodule, follow
+that repo's own `CONTRIBUTING.md`.
 
 ## First-time setup
 
@@ -14,8 +12,8 @@ make doctor             # verify required toolchain
 make pre-commit-install # install commitlint + workspace hooks
 ```
 
-`make doctor` reports missing tools (uv, podman, kind, rust, go, node, gh, …) with
-copy-pastable install hints. It does not install anything itself — you decide.
+`make doctor` reports missing tools with copy-pastable install hints. It does
+not install anything itself.
 
 ## Where to put a change
 
@@ -28,8 +26,8 @@ copy-pastable install hints. It does not install anything itself — you decide.
 | ADR, roadmap, release matrix, public docs | `project-hub` |
 | **Cross-repo glue** (Makefile, CI, top-level docs) | **this repo** |
 
-If a single change spans multiple repos, open one PR per repo and link them in the
-descriptions. Merge order follows the dependency chain below.
+If a single change spans multiple repos, open one PR per repo, link them, and
+merge in dependency order (below).
 
 ## Cross-repo dependency order
 
@@ -38,71 +36,53 @@ aerospike-py → ACKO → cluster-manager → plugins
 ```
 
 When the upstream repo changes its public surface (Python API, CRD schema, REST
-endpoints), the downstream repos must be updated in the same order. The
-`.claude/skills/cross-repo-impact/` skill helps trace which downstream files need
-attention; invoke it from Claude Code when planning a multi-repo change.
+endpoints), downstream repos must be updated in this order. The
+`.claude/skills/cross-repo-impact/` skill traces affected files for you.
 
 ## Commit messages
 
-This workspace enforces [Conventional Commits](https://www.conventionalcommits.org/)
-via the `commitlint` pre-commit hook. Allowed types:
-
-- `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`
-
-Examples:
-
-```
-chore(submodules): bump aerospike-py to v0.9.3
-feat(makefile): add doctor target for prerequisite checks
-docs(contributing): document cross-repo PR workflow
-```
+Conventional Commits is enforced by the `commitlint` pre-commit hook. Allowed
+types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
 
 ## Architecture decisions
 
-Workspace-wide decisions (e.g., "use Podman over Docker", "PyO3 over CFFI") live as
-ADRs in `project-hub/docs/docs/architecture/adr/`. Add a new ADR when you make a
-choice future contributors need to understand. The CLAUDE.md at the repo root lists
-the most load-bearing ADRs.
+Workspace-wide decisions live as ADRs in
+`project-hub/docs/docs/architecture/adr/`. The repo-root `CLAUDE.md` lists the
+load-bearing ones.
 
 ## Releases
 
-Each submodule releases independently with its own semver tags. **This workspace
-does not release** — there is no `asc-workspace` tag. Compatibility between
-submodule versions is tracked in
+Each submodule releases independently with its own semver tags. **This
+workspace does not release** — there is no `asc-workspace` tag.
+Cross-version compatibility is tracked in
 [`project-hub` › Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/).
-When a submodule cuts a release that breaks compatibility, update the matrix in the
-same PR.
+When a submodule cuts a breaking release, update the matrix in the same PR.
 
-The workspace's own [`CHANGELOG.md`](CHANGELOG.md) records changes to *this* repo
-(Makefile targets, CI workflows, top-level docs). Submodule-pin bumps are not logged
-there — the commit history (`chore(submodules): bump …`) is the source of truth.
+The workspace's [`CHANGELOG.md`](CHANGELOG.md) records changes to *this* repo
+only. Submodule-pin bumps are not logged there — the `chore(submodules): bump …`
+commit history is the source of truth.
 
 ## Automated submodule bumps
 
-`.github/workflows/submodule-bump.yml` runs daily. It walks each submodule, fast-
-forwards it to `origin/main`, opens a PR titled `chore(submodules): bump …`, and
-auto-merges (squash) once `verify.yml` is green. Repo settings required for this to
-work:
+`.github/workflows/submodule-bump.yml` runs daily, fast-forwards each submodule
+to `origin/main` (one per cycle, in dependency order), opens a PR titled
+`chore(submodules): bump …`, and auto-merges (squash) once `verify` is green.
+
+One-time setup required:
 
 - **Allow auto-merge** enabled in repo settings
 - Branch protection on `main` requires the `verify` status check
-- A token with `contents: write` and `pull-requests: write` on the workflow
+- `SUBMODULE_BUMP_TOKEN` secret with `contents: write` + `pull-requests: write`
+  (a PAT or GitHub App token; the default `GITHUB_TOKEN` does not trigger
+  `verify` on PRs it opens, which would block auto-merge)
 
-If you need to roll back a bump, revert the squash commit on `main` — the next
-daily run will re-evaluate and either skip or re-bump as appropriate.
+To roll back a bump, revert the squash commit on `main` — the next daily run
+will re-evaluate.
 
 ## Pull request checklist
 
-The `.github/PULL_REQUEST_TEMPLATE.md` will prompt you, but in short:
-
-- [ ] Conventional Commit subject
+- [ ] Conventional Commit subject (commitlint will reject otherwise)
 - [ ] `make help` still renders, new targets documented with `## description`
 - [ ] If touching CI, ran `pre-commit run --all-files` locally
 - [ ] If introducing a workspace-wide convention, ADR added in `project-hub`
-- [ ] CHANGELOG.md `[Unreleased]` updated for workspace-affecting changes
-
-## Code of conduct
-
-Be respectful, be specific, prefer reproducible repros. Security-sensitive issues
-should be reported via the channel listed in each project's `SECURITY.md`, not in
-public issues.
+- [ ] `CHANGELOG.md` `[Unreleased]` updated for workspace-affecting changes
