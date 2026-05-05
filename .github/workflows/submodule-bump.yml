@@ -1,0 +1,115 @@
+name: submodule-bump
+
+# Daily auto-bump of submodule pins to origin/main, one submodule per cycle in
+# dependency order. Each bump opens its own PR and auto-merges (squash) once
+# `verify.yml` is green. See CONTRIBUTING.md › "Automated submodule bumps" for
+# the one-time GitHub settings (Allow auto-merge, branch protection, token).
+#
+# Phased activation (matches the workspace plan):
+#   5a — workflow_dispatch only (current). Run manually first to validate the
+#        whole PR-create + auto-merge flow.
+#   5b — uncomment the schedule block below to go daily.
+#   5c — monitor first few cycles, then leave it alone.
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '17 6 * * *'   # daily at ~06:17 UTC; enable in phase 5b.
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: submodule-bump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # Prefer a PAT or GitHub App token so the PR this workflow opens
+          # actually triggers verify.yml (a PR opened with GITHUB_TOKEN does
+          # not, and auto-merge would then never satisfy the status check).
+          token: ${{ secrets.SUBMODULE_BUMP_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git author
+        run: |
+          git config user.name  "asc-workspace-bot"
+          git config user.email "asc-workspace-bot@users.noreply.github.com"
+
+      - name: Bump first changed submodule (dependency-ordered)
+        env:
+          GH_TOKEN: ${{ secrets.SUBMODULE_BUMP_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Skip the cycle if there is already an open bot PR. Without this,
+          # repeated cron runs would queue new branches while a previous PR
+          # is still waiting on verify, piling up open PRs.
+          existing_open="$(gh pr list --state open --json headRefName \
+            --jq '[.[] | select(.headRefName | startswith("bot/bump-"))] | length')"
+          if [ "${existing_open:-0}" -gt 0 ]; then
+            echo "::notice::${existing_open} open auto-bump PR(s) found; skipping this cycle until they merge."
+            exit 0
+          fi
+
+          # Dependency order. We only bump ONE submodule per run to avoid
+          # race conditions (e.g., ACKO consuming a not-yet-merged aerospike-py
+          # bump). Subsequent runs will pick up the next.
+          ORDER="aerospike-py \
+                 aerospike-ce-kubernetes-operator \
+                 aerospike-cluster-manager \
+                 aerospike-ce-ecosystem-plugins \
+                 project-hub"
+
+          for sub in $ORDER; do
+            pushd "$sub" >/dev/null
+            git fetch --quiet origin main
+            before="$(git rev-parse HEAD)"
+            after="$(git rev-parse origin/main)"
+            popd >/dev/null
+
+            if [ "$before" = "$after" ]; then
+              echo "skip: $sub already at origin/main"
+              continue
+            fi
+
+            short_before="$(echo "$before" | cut -c1-7)"
+            short_after="$(echo "$after"  | cut -c1-7)"
+            stamp="$(date -u +%Y%m%d-%H%M)"
+            branch="bot/bump-${sub}-${stamp}"
+
+            git checkout -b "$branch"
+            ( cd "$sub" && git checkout "$after" )
+            git add "$sub"
+            git commit -m "chore(submodules): bump ${sub} to ${short_after}"
+            git push -u origin "$branch"
+
+            body=$(cat <<EOF
+          Automated daily bump for \`${sub}\`.
+
+          - Before: \`${short_before}\`
+          - After:  \`${short_after}\` (origin/main)
+
+          Will auto-merge (squash) once \`verify\` is green. If you need to roll
+          back, revert the squash commit on \`main\` — the next daily run will
+          re-evaluate.
+          EOF
+          )
+            gh pr create \
+              --title "chore(submodules): bump ${sub} to ${short_after}" \
+              --body  "$body" \
+              --label "automated,dependencies"
+            gh pr merge --auto --squash
+
+            echo "::notice::Bumped $sub: $short_before -> $short_after"
+            exit 0
+          done
+
+          echo "::notice::No submodule bumps needed today."

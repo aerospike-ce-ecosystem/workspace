@@ -1,0 +1,63 @@
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Workspace-level smoke checks only. Each submodule runs its own deeper CI in
+# its own repo. The job name `verify` is referenced by branch-protection rules
+# (it is the safety gate for the daily auto-merge in submodule-bump.yml).
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pre-commit:
+    name: pre-commit (workspace files)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pre-commit/action@v3.0.1
+
+  makefile-help:
+    name: Makefile sanity (make help)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: make help
+        run: make help
+
+  submodule-pointers:
+    name: Submodule pointer drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Check each submodule is on main or tagged
+        run: bash scripts/check-submodule-pointers.sh
+
+  verify:
+    name: verify
+    needs: [pre-commit, makefile-help, submodule-pointers]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Aggregate result
+        run: |
+          if [[ "${{ needs.pre-commit.result }}" != "success" || \
+                "${{ needs.makefile-help.result }}" != "success" || \
+                "${{ needs.submodule-pointers.result }}" != "success" ]]; then
+            echo "One or more verify jobs failed."
+            exit 1
+          fi
+          echo "All verify jobs passed."

@@ -23,6 +23,10 @@ pre-commit-install: ## Install pre-commit hooks (workspace + all submodules)
 	pre-commit install --hook-type pre-commit --hook-type commit-msg
 	git submodule foreach 'if [ -f .pre-commit-config.yaml ]; then pre-commit install; fi'
 
+.PHONY: doctor
+doctor: ## Check required toolchain (uv, podman, kind, rust, go, node, pre-commit)
+	@bash scripts/bootstrap.sh
+
 .PHONY: init-ssh
 init-ssh: ## Convert submodule URLs to SSH and initialize
 	@git submodule foreach 'url=$$(git remote get-url origin); ssh_url=$$(echo $$url | sed "s|https://github.com/|git@github.com:|"); git remote set-url origin $$ssh_url; echo "  → $$ssh_url"'
@@ -68,6 +72,13 @@ build-cm: ## Build cluster-manager
 build-docs: ## Build project-hub Docusaurus site
 	cd project-hub/docs && npm ci && npm run build
 
+.PHONY: clean
+clean: ## Clean build artifacts in all submodules
+	cd aerospike-py && make clean
+	cd aerospike-ce-kubernetes-operator && make clean
+	cd aerospike-cluster-manager && make clean
+	cd project-hub/docs && npm run clear
+
 ##@ Test
 
 .PHONY: test-py
@@ -81,6 +92,9 @@ test-acko: ## Run ACKO unit + integration tests
 .PHONY: test-cm
 test-cm: ## Run cluster-manager tests (backend + frontend)
 	cd aerospike-cluster-manager && make test
+
+.PHONY: test-all
+test-all: test-py test-acko test-cm ## Run tests in all repos sequentially
 
 ##@ Lint
 
@@ -99,6 +113,11 @@ lint-cm: ## Lint cluster-manager
 .PHONY: lint-all
 lint-all: lint-py lint-acko lint-cm ## Lint all repos
 
+.PHONY: format-all
+format-all: ## Auto-format code in repos that expose a formatter (py + ACKO)
+	cd aerospike-py && make fmt
+	cd aerospike-ce-kubernetes-operator && make fmt
+
 ##@ Infrastructure
 
 .PHONY: start-aerospike
@@ -116,3 +135,11 @@ start-cm: ## Start cluster-manager full stack (Podman Compose)
 .PHONY: stop-cm
 stop-cm: ## Stop cluster-manager
 	cd aerospike-cluster-manager && make down
+
+.PHONY: dev
+dev: ## Start cluster-manager dev stack (3-node Aerospike CE + Postgres + API + UI, detached)
+	cd aerospike-cluster-manager && make dev-up
+
+.PHONY: start-kind
+start-kind: ## Bring up Kind cluster (delegates to cluster-manager kind-up target)
+	cd aerospike-cluster-manager && make kind-up

@@ -1,0 +1,19 @@
+# Dependabot for the asc-workspace meta-repo.
+# Scope is intentionally narrow: workspace-level GitHub Actions only.
+# Each submodule (aerospike-py, ACKO, cluster-manager, plugins, project-hub)
+# manages its own language ecosystems via its own dependabot.yml.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 5
