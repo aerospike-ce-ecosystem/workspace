@@ -21,7 +21,7 @@ jobs:
     name: pre-commit (workspace files)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -31,7 +31,7 @@ jobs:
     name: Makefile sanity (make help)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: make help
         run: make help
 
@@ -39,7 +39,7 @@ jobs:
     name: Submodule pointer drift
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           fetch-depth: 0
