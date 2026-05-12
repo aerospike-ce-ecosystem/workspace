@@ -18,3 +18,7 @@
 	path = project-hub
 	url = https://github.com/aerospike-ce-ecosystem/project-hub.git
 	branch = main
+[submodule "ackoctl"]
+	path = ackoctl
+	url = https://github.com/aerospike-ce-ecosystem/ackoctl.git
+	branch = main
