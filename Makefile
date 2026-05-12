@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 SUBMODULES := aerospike-py aerospike-ce-kubernetes-operator \
               aerospike-cluster-manager aerospike-ce-ecosystem-plugins \
-              project-hub
+              project-hub ackoctl
 
 .DEFAULT_GOAL := help
 
@@ -72,12 +72,17 @@ build-cm: ## Build cluster-manager
 build-docs: ## Build project-hub Docusaurus site
 	cd project-hub/docs && npm ci && npm run build
 
+.PHONY: build-ackoctl
+build-ackoctl: ## Build the ackoctl CLI (Go)
+	cd ackoctl && make build
+
 .PHONY: clean
 clean: ## Clean build artifacts in all submodules
 	cd aerospike-py && make clean
 	cd aerospike-ce-kubernetes-operator && make clean
 	cd aerospike-cluster-manager && make clean
 	cd project-hub/docs && npm run clear
+	cd ackoctl && make clean
 
 ##@ Test
 
@@ -93,8 +98,12 @@ test-acko: ## Run ACKO unit + integration tests
 test-cm: ## Run cluster-manager tests (backend + frontend)
 	cd aerospike-cluster-manager && make test
 
+.PHONY: test-ackoctl
+test-ackoctl: ## Run ackoctl Go tests
+	cd ackoctl && make test
+
 .PHONY: test-all
-test-all: test-py test-acko test-cm ## Run tests in all repos sequentially
+test-all: test-py test-acko test-cm test-ackoctl ## Run tests in all repos sequentially
 
 ##@ Lint
 
@@ -110,8 +119,12 @@ lint-acko: ## Lint ACKO
 lint-cm: ## Lint cluster-manager
 	cd aerospike-cluster-manager && make lint
 
+.PHONY: lint-ackoctl
+lint-ackoctl: ## Lint ackoctl (golangci-lint)
+	cd ackoctl && make lint
+
 .PHONY: lint-all
-lint-all: lint-py lint-acko lint-cm ## Lint all repos
+lint-all: lint-py lint-acko lint-cm lint-ackoctl ## Lint all repos
 
 .PHONY: format-all
 format-all: ## Auto-format code in repos that expose a formatter (py + ACKO)
