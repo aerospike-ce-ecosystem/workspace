@@ -61,10 +61,13 @@ jobs:
 
           # Dependency order. We only bump ONE submodule per run to avoid
           # race conditions (e.g., ACKO consuming a not-yet-merged aerospike-py
-          # bump). Subsequent runs will pick up the next.
+          # bump). Subsequent runs will pick up the next. ackoctl ships
+          # alongside cluster-manager (it talks to the same REST API), so
+          # it bumps right after cluster-manager and before plugins.
           ORDER="aerospike-py \
                  aerospike-ce-kubernetes-operator \
                  aerospike-cluster-manager \
+                 ackoctl \
                  aerospike-ce-ecosystem-plugins \
                  project-hub"
 
