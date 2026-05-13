@@ -170,6 +170,24 @@ claude plugin install aerospike-ce-ecosystem
 - **Secrets**: No direct commits of `.env` or credentials — use environment variable references
 - **Scope**: Only modify files within the current task scope
 
+### Versioning — MAJOR bumps require explicit user approval
+
+Across every repo in this ecosystem (`ackoctl`, `aerospike-cluster-manager`, `aerospike-ce-kubernetes-operator`, `aerospike-ce-ecosystem-plugins`, `aerospike-py`, `project-hub`):
+
+- **Never propose, edit, or push a MAJOR version bump (X.0.0) without explicit user approval.** This applies to manifest fields (`plugin.json` `version`, `package.json` `version`, `pyproject.toml` `version`, `Cargo.toml` `version`, helm `Chart.yaml` `version`/`appVersion`, etc.) and to git tags (`vX.0.0` push).
+- **MINOR / PATCH** are fine to ship without prior approval (auto-release workflows handle them via Conventional Commits parsing). New features → MINOR, bug fixes → PATCH.
+- **What is NOT automatically MAJOR**:
+  - Removing a skill from `aerospike-ce-ecosystem-plugins` when a replacement skill covers every former trigger one-to-one.
+  - Retiring the upstream MCP HTTP server in `aerospike-cluster-manager` while `ackoctl` provides equivalent coverage.
+  - Renaming an internal helper, a non-exported function, or any symbol that has no public consumer.
+- **What IS MAJOR (still requires explicit approval before bumping)**:
+  - Removing a CLI verb or flag that users could plausibly have scripted against.
+  - Renaming a Pydantic/Go/TypeScript public type or its JSON wire alias.
+  - CRD `apiVersion` bumps in ACKO, `aerospike-py` public API renames, or any cross-repo contract that downstream code keys on.
+  - Deprecated skills/agents/commands being deleted at their scheduled major (per `VERSIONING.md`).
+- **Don't manually edit `version:` keys.** Auto-release workflows (`daily-release.yml` in plugins/cluster-manager, `release.yml` on tag push in ackoctl, etc.) bump from Conventional Commits headers. Manual edits drift from the actual release tag and create the kind of inconsistency that requires a `revert: erase X.Y.Z release history` follow-up.
+- **If a change feels MAJOR**, surface it to the user first with the impact (which trigger / flag / type / CRD is broken) and let them approve the bump and the migration notes before any commit lands.
+
 ---
 
 ## Nested Submodule Note
