@@ -1,6 +1,6 @@
 # Aerospike CE Ecosystem — Workspace
 
-A meta-repository for the open-source integrated tooling ecosystem for Aerospike Community Edition.
+A meta-repository for the open-source integrated tooling ecosystem for Aerospike Community Edition, with 6 submodules.
 
 ```bash
 git clone --recursive https://github.com/aerospike-ce-ecosystem/workspace.git
@@ -22,7 +22,8 @@ make pull-all   # Update all repos to latest main
 | **[aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py)** | High-performance async Python client built on Rust/PyO3 | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/aerospike-py?color=green)](https://github.com/aerospike-ce-ecosystem/aerospike-py/releases/latest) |
 | **[ACKO](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator)** | Kubernetes Operator — declarative CE cluster management via CRD | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator?color=green)](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/releases/latest) |
 | **[Cluster Manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager)** | Web management UI — monitoring, Record browser, Query builder | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/aerospike-cluster-manager?color=green)](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/releases/latest) |
-| **[Plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins)** | Claude Code plugin — 5 Skills + 1 Agent | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins?color=green)](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases/latest) |
+| **[ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl)** | CLI for Cluster Manager — connections, records, queries, indexes, and K8s CRs | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/ackoctl?color=green)](https://github.com/aerospike-ce-ecosystem/ackoctl/releases/latest) |
+| **[Plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins)** | Claude Code plugin — 9 skills, no separate agent | [![release](https://img.shields.io/github/v/release/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins?color=green)](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases/latest) |
 | **[Project Hub](https://github.com/aerospike-ce-ecosystem/project-hub)** | Central documentation hub — ADRs, goals, roadmap | — |
 
 ## Prerequisites
@@ -32,6 +33,7 @@ make pull-all   # Update all repos to latest main
 | aerospike-py | Rust toolchain, Python 3.10+, [uv](https://docs.astral.sh/uv/), [maturin](https://www.maturin.rs/) |
 | ACKO | Go 1.25+, [Kind](https://kind.sigs.k8s.io/), kubectl |
 | Cluster Manager | Node.js 22+, [Podman](https://podman.io/) |
+| ackoctl | Go 1.25+ |
 | Project Hub | Node.js 22+ |
 
 ## AI Development
@@ -42,8 +44,7 @@ Install the Claude Code plugin to get AI-assisted development support:
 claude plugin install aerospike-ce-ecosystem
 ```
 
-**Skills**: `acko-deploy`, `acko-operations`, `acko-config-reference`, `aerospike-py-api`, `aerospike-py-fastapi`
-**Agent**: `acko-cluster-debugger`
+**Skills**: `acko-deploy`, `acko-operations`, `acko-config-reference`, `acko-e2e-test`, `ackoctl`, `acko-debugging`, `aerospike-py-api`, `aerospike-py-fastapi`, `bug-reporter`
 
 ## Documentation
 

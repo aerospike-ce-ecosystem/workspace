@@ -1,6 +1,6 @@
 # Aerospike CE Ecosystem — Workspace
 
-A meta-repository that integrates 5 projects as submodules.
+A meta-repository that integrates 6 projects as submodules.
 Set up the entire development environment in a single step with `git clone --recursive`.
 
 ---
@@ -26,7 +26,7 @@ This ecosystem fills all four gaps.
 | **ACKO** | `aerospike-ce-kubernetes-operator/` | Go 1.25, kubebuilder v4, controller-runtime v0.23 | K8s CE cluster Operator (declarative management via CRD) |
 | **Cluster Manager** | `aerospike-cluster-manager/` | FastAPI + Next.js 14.2, React 18.2, Tailwind CSS 3.4 | Web management UI (monitoring, Record browser, Query builder, K8s management) |
 | **ackoctl** | `ackoctl/` | Go 1.25 + cobra | CLI for cluster-manager (connection/cluster/k8s/record/set/query/index) |
-| **Plugins** | `aerospike-ce-ecosystem-plugins/` | Claude Code plugin spec | 5 Skills + 1 Agent (AI development support) |
+| **Plugins** | `aerospike-ce-ecosystem-plugins/` | Claude Code plugin spec | 9 skills (AI development support; no separate agent) |
 | **Project Hub** | `project-hub/` | Docusaurus v3.9 | Central documentation hub — 40+ ADRs, goals, roadmap, release matrix |
 
 Each repo has its own CLAUDE.md — always refer to it when working in that repo.
@@ -36,7 +36,7 @@ Each repo has its own CLAUDE.md — always refer to it when working in that repo
 ## Architecture (3 Layers)
 
 ```
-Layer 1 — Agent + Plugin     : aerospike-ce-ecosystem-plugins (Claude Code)
+Layer 1 — Plugin Skills      : aerospike-ce-ecosystem-plugins (Claude Code)
 Layer 2 — Tools              : aerospike-py, ACKO, aerospike-cluster-manager
 Layer 3 — Infrastructure     : Aerospike CE on K8s (via ACKO) or bare metal
 ```
@@ -149,14 +149,12 @@ claude plugin install aerospike-ce-ecosystem
 | `acko-deploy` | "deploy Aerospike on Kubernetes" | CE K8s deployment (includes 8 scenario YAMLs) |
 | `acko-operations` | "scale Aerospike cluster" | Day-2 operations (scale, upgrade, dynamic config, troubleshooting) |
 | `acko-config-reference` | (background) | CE 8.1 config parameters, CRD mapping, Webhook validation |
+| `acko-e2e-test` | "ACKO e2e test", "kind cluster test" | End-to-end ACKO test playbook and release-verification checks |
+| `ackoctl` | "ackoctl", "manage Aerospike connection", "browse records" | CLI usage for cluster-manager contexts, records, queries, indexes, K8s CRs, admin, and UDFs |
+| `acko-debugging` | "CrashLoopBackOff", "phase=Error", "reconcile failure" | Systematic ACKO cluster debugging through ackoctl first, with kubectl/asinfo fallback |
 | `aerospike-py-api` | "use aerospike-py" | Full Python client API reference |
 | `aerospike-py-fastapi` | "FastAPI + Aerospike" | FastAPI production patterns |
-
-### Agent
-
-| Agent | Purpose |
-|-------|------|
-| `acko-cluster-debugger` | Systematic K8s cluster debugging (6-step diagnostic procedure) |
+| `bug-reporter` | "report this to GitHub" | Route ecosystem bugs to the right repo and draft issue context |
 
 ---
 
