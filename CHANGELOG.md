@@ -34,5 +34,7 @@ Workspace itself does not carry a semver tag — entries are dated.
 
 ### Changed
 - README links to the Release Matrix and CONTRIBUTING.
+- Enabled the `submodule-bump.yml` daily schedule so the workflow behavior
+  matches the documented auto-bump policy.
 
 [Unreleased]: https://github.com/aerospike-ce-ecosystem/workspace/commits/main
