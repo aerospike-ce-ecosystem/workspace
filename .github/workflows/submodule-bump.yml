@@ -5,16 +5,13 @@ name: submodule-bump
 # `verify.yml` is green. See CONTRIBUTING.md › "Automated submodule bumps" for
 # the one-time GitHub settings (Allow auto-merge, branch protection, token).
 #
-# Phased activation (matches the workspace plan):
-#   5a — workflow_dispatch only (current). Run manually first to validate the
-#        whole PR-create + auto-merge flow.
-#   5b — uncomment the schedule block below to go daily.
-#   5c — monitor first few cycles, then leave it alone.
+# Runs daily after the core repos' release windows, and can still be triggered
+# manually when a dependency needs to be advanced immediately.
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '17 6 * * *'   # daily at ~06:17 UTC; enable in phase 5b.
+  schedule:
+    - cron: '17 6 * * *'   # daily at ~06:17 UTC
 
 permissions:
   contents: write
