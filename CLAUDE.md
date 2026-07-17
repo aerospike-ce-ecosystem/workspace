@@ -24,7 +24,7 @@ This ecosystem fills all four gaps.
 |------|------|-----------|---------|
 | **aerospike-py** | `aerospike-py/` | Rust/PyO3 + Tokio, Python 3.10-3.15 | High-performance async Python client (2.4x faster than C client) |
 | **ACKO** | `aerospike-ce-kubernetes-operator/` | Go 1.25, kubebuilder v4, controller-runtime v0.23 | K8s CE cluster Operator (declarative management via CRD) |
-| **Cluster Manager** | `aerospike-cluster-manager/` | FastAPI + Next.js 14.2, React 18.3, Tailwind CSS 4.3 | Web management UI (monitoring, Record browser, Query builder, K8s management) |
+| **Cluster Manager** | `aerospike-cluster-manager/` | FastAPI + Next.js 15, React 18.3, Tailwind CSS 4.3 | Web management UI (monitoring, Record browser, Query builder, K8s management) |
 | **ackoctl** | `ackoctl/` | Go 1.25 + cobra | CLI for cluster-manager (connection/cluster/k8s/record/set/query/index) |
 | **Plugins** | `aerospike-ce-ecosystem-plugins/` | Claude Code plugin spec | 9 skills (AI development support; no separate agent) |
 | **Project Hub** | `project-hub/` | Docusaurus v3.9 | Central documentation hub — 50+ ADRs, goals, roadmap, release matrix |
