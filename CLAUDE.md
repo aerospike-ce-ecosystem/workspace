@@ -22,12 +22,12 @@ This ecosystem fills all four gaps.
 
 | Repo | Path | Tech Stack | Purpose |
 |------|------|-----------|---------|
-| **aerospike-py** | `aerospike-py/` | Rust/PyO3 + Tokio, Python 3.10-3.14 | High-performance async Python client (2.4x faster than C client) |
+| **aerospike-py** | `aerospike-py/` | Rust/PyO3 + Tokio, Python 3.10-3.15 | High-performance async Python client (2.4x faster than C client) |
 | **ACKO** | `aerospike-ce-kubernetes-operator/` | Go 1.25, kubebuilder v4, controller-runtime v0.23 | K8s CE cluster Operator (declarative management via CRD) |
-| **Cluster Manager** | `aerospike-cluster-manager/` | FastAPI + Next.js 14.2, React 18.2, Tailwind CSS 3.4 | Web management UI (monitoring, Record browser, Query builder, K8s management) |
+| **Cluster Manager** | `aerospike-cluster-manager/` | FastAPI + Next.js 14.2, React 18.3, Tailwind CSS 4.3 | Web management UI (monitoring, Record browser, Query builder, K8s management) |
 | **ackoctl** | `ackoctl/` | Go 1.25 + cobra | CLI for cluster-manager (connection/cluster/k8s/record/set/query/index) |
 | **Plugins** | `aerospike-ce-ecosystem-plugins/` | Claude Code plugin spec | 9 skills (AI development support; no separate agent) |
-| **Project Hub** | `project-hub/` | Docusaurus v3.9 | Central documentation hub — 40+ ADRs, goals, roadmap, release matrix |
+| **Project Hub** | `project-hub/` | Docusaurus v3.9 | Central documentation hub — 50+ ADRs, goals, roadmap, release matrix |
 
 Each repo has its own CLAUDE.md — always refer to it when working in that repo.
 
@@ -88,7 +88,7 @@ Attempting to use Enterprise features produces a clear error message.
 | Document | Path / URL |
 |------|-----------|
 | **Project Hub (deployed)** | https://aerospike-ce-ecosystem.github.io/project-hub/ |
-| **ADR (40+ entries)** | `project-hub/docs/docs/architecture/adr/` |
+| **ADR (50+ entries)** | `project-hub/docs/docs/architecture/adr/` |
 | **Project Goals** | `project-hub/docs/docs/goals/project-goals.md` |
 | **Design Philosophy** | `project-hub/docs/docs/goals/project-design.md` |
 | **Q2 2026 Roadmap** | `project-hub/docs/docs/roadmap/current.md` |
