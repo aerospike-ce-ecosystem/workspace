@@ -1,11 +1,8 @@
 # Changelog
 
-All notable changes to **this workspace** (the meta-repo) are documented in this
-file. Submodule changes are tracked in their own repos and aggregated in the
-[Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/).
+This file records notable changes to the workspace meta-repository. Each submodule keeps its own history, and the [Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/) lists compatible versions across projects.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-Workspace itself does not carry a semver tag — entries are dated.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The workspace does not publish SemVer tags, so entries are organized by date instead of release number.
 
 ## [Unreleased]
 

@@ -1,6 +1,6 @@
 # Aerospike CE Ecosystem — Workspace
 
-A meta-repository for the open-source integrated tooling ecosystem for Aerospike Community Edition, with 6 submodules.
+This meta-repository brings together six open-source projects for developing and operating Aerospike Community Edition. Each project remains an independent Git repository and is included here as a submodule.
 
 ```bash
 git clone --recursive https://github.com/aerospike-ce-ecosystem/workspace.git
@@ -8,11 +8,13 @@ git clone --recursive https://github.com/aerospike-ce-ecosystem/workspace.git
 
 ## Quick Start
 
+Clone the workspace recursively so that Git checks out every project at the version recorded by the workspace.
+
 ```bash
 cd workspace
-make init       # Initialize all submodules (if not using --recursive)
-make status     # Check repo status
-make pull-all   # Update all repos to latest main
+make init       # Initialize submodules if the clone omitted --recursive
+make status     # Show the status of every repository
+make pull-all   # Update every repository to the latest main branch
 ```
 
 ## What's Inside
@@ -38,7 +40,7 @@ make pull-all   # Update all repos to latest main
 
 ## AI Development
 
-Install the Claude Code plugin to get AI-assisted development support:
+Install the Claude Code plugin to add Aerospike-specific deployment, operations, API, and troubleshooting guidance:
 
 ```bash
 claude plugin install aerospike-ce-ecosystem
@@ -55,20 +57,18 @@ claude plugin install aerospike-ce-ecosystem
 
 ## Contributing
 
-Cross-repo workflow, dependency order, commit conventions, and the daily
-auto-bump policy are documented in [CONTRIBUTING.md](CONTRIBUTING.md).
-Workspace-only changes are tracked in [CHANGELOG.md](CHANGELOG.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) explains where to submit a change, how cross-repository work is ordered, and which commit and release conventions apply. [CHANGELOG.md](CHANGELOG.md) records changes to this meta-repository only.
 
 ## Working with Submodules
 
 ```bash
-# Switch to SSH (contributor)
+# Use SSH URLs when contributing
 make init-ssh
 
-# Update all repos to latest
+# Update every repository to its latest main branch
 make pull-all
 
-# Work on a feature branch in a specific repo
+# Create a feature branch in one repository
 cd aerospike-py
 git checkout -b feature/my-feature
 # ... work ...
@@ -76,4 +76,4 @@ git checkout -b feature/my-feature
 
 ## License
 
-All projects are licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+Every project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).

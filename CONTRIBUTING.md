@@ -1,7 +1,6 @@
-# Contributing to asc-workspace
+# Contributing to the Aerospike CE Ecosystem Workspace
 
-Conventions specific to this meta-repo. For changes inside a submodule, follow
-that repo's own `CONTRIBUTING.md`.
+This guide covers changes to the workspace itself and work that spans more than one repository. When you edit a submodule, also follow that repository's `CONTRIBUTING.md`.
 
 ## First-time setup
 
@@ -12,8 +11,7 @@ make doctor             # verify required toolchain
 make pre-commit-install # install commitlint + workspace hooks
 ```
 
-`make doctor` reports missing tools with copy-pastable install hints. It does
-not install anything itself.
+`make doctor` checks the required tools and prints installation hints for anything missing. It does not install software.
 
 ## Where to put a change
 
@@ -26,8 +24,7 @@ not install anything itself.
 | ADR, roadmap, release matrix, public docs | `project-hub` |
 | **Cross-repo glue** (Makefile, CI, top-level docs) | **this repo** |
 
-If a single change spans multiple repos, open one PR per repo, link them, and
-merge in dependency order (below).
+If a change spans several repositories, open and link one PR per repository. Merge them in the dependency order shown below.
 
 ## Cross-repo dependency order
 
@@ -35,49 +32,34 @@ merge in dependency order (below).
 aerospike-py → ACKO → cluster-manager → plugins
 ```
 
-When the upstream repo changes its public surface (Python API, CRD schema, REST
-endpoints), downstream repos must be updated in this order. The
-`.claude/skills/cross-repo-impact/` skill traces affected files for you.
+When an upstream repository changes a public interface such as the Python API, CRD schema, or REST endpoint, update its consumers in this order. The `.claude/skills/cross-repo-impact/` Skill can identify likely downstream files.
 
 ## Commit messages
 
-Conventional Commits is enforced by the `commitlint` pre-commit hook. Allowed
-types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
+The `commitlint` pre-commit hook enforces Conventional Commits. Allowed types are `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, and `test`.
 
 ## Architecture decisions
 
-Workspace-wide decisions live as ADRs in
-`project-hub/docs/docs/architecture/adr/`. The repo-root `CLAUDE.md` lists the
-load-bearing ones.
+Record workspace-wide decisions as ADRs in `project-hub/docs/docs/architecture/adr/`. The root `CLAUDE.md` points to the decisions that most directly affect cross-repository work.
 
 ## Releases
 
-Each submodule releases independently with its own semver tags. **This
-workspace does not release** — there is no `asc-workspace` tag.
-Cross-version compatibility is tracked in
-[`project-hub` › Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/).
-When a submodule cuts a breaking release, update the matrix in the same PR.
+Each submodule releases independently with its own SemVer tags. **The workspace itself does not publish releases** and has no `asc-workspace` tag. The [`project-hub` Release Matrix](https://aerospike-ce-ecosystem.github.io/project-hub/docs/history/releases/release-matrix/) tracks compatible versions. When a submodule publishes a breaking release, update the matrix as part of the coordinated change.
 
-The workspace's [`CHANGELOG.md`](CHANGELOG.md) records changes to *this* repo
-only. Submodule-pin bumps are not logged there — the `chore(submodules): bump …`
-commit history is the source of truth.
+The workspace [`CHANGELOG.md`](CHANGELOG.md) records changes to this repository only. It does not list submodule pointer updates; use the `chore(submodules): bump …` commit history for those changes.
 
 ## Automated submodule bumps
 
-`.github/workflows/submodule-bump.yml` runs daily, fast-forwards each submodule
-to `origin/main` (one per cycle, in dependency order), opens a PR titled
-`chore(submodules): bump …`, and auto-merges (squash) once `verify` is green.
+`.github/workflows/submodule-bump.yml` runs every day. It fast-forwards one submodule per cycle to `origin/main`, following dependency order, and opens a `chore(submodules): bump …` PR. Once the `verify` check passes, the workflow squash-merges the PR automatically.
 
-One-time setup required:
+Repository administrators must complete this setup once:
 
 - **Allow auto-merge** enabled in repo settings
 - Branch protection on `main` requires the `verify` status check
 - `SUBMODULE_BUMP_TOKEN` secret with `contents: write` + `pull-requests: write`
-  (a PAT or GitHub App token; the default `GITHUB_TOKEN` does not trigger
-  `verify` on PRs it opens, which would block auto-merge)
+  Use a PAT or GitHub App token. The default `GITHUB_TOKEN` does not trigger `verify` for PRs it creates, so those PRs cannot satisfy the auto-merge requirement.
 
-To roll back a bump, revert the squash commit on `main` — the next daily run
-will re-evaluate.
+To roll back a submodule update, revert its squash commit on `main`. The next daily run will evaluate the pointer again.
 
 ## Pull request checklist
 
